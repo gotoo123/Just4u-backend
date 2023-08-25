@@ -48,4 +48,4 @@ jobs:
             docker rm just4u-backend
             docker rmi gotoo123/just4u-backend:main
             docker pull gotoo123/just4u-backend:main
-            docker run --name just4u-backend -d -p 8888:80 gotoo123/just4u-backend:main
+            docker run --name just4u-backend -d -p 8888:3000 gotoo123/just4u-backend:main
