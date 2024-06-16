@@ -17,8 +17,9 @@ jobs:
       - name: login docker hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_TOKEN }}
+          registry: ${{ secrets.CUSTOM_DOCKER_HUB }}
+          username: ${{ secrets.CUSTOM_DOCKER_USERNAME }}
+          password: ${{ secrets.CUSTOM_DOCKER_TOKEN }}
       - name: get docker meta
         id: meta
         uses: docker/metadata-action@v4
@@ -29,7 +30,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ secrets.CUSTOM_DOCKER_HUB }}/gotoo123/just4u-backend:main
           label: ${{ steps.meta.outputs.labels }}
 
   deploy:
@@ -48,5 +49,5 @@ jobs:
             docker stop just4u-backend
             docker rm just4u-backend
             docker rmi gotoo123/just4u-backend:main
-            docker pull gotoo123/just4u-backend:main
-            docker run --name just4u-backend -d -p 8888:3000 gotoo123/just4u-backend:main
+            docker pull ${{ secrets.CUSTOM_DOCKER_HUB }}/gotoo123/just4u-backend:main
+            docker run --name just4u-backend -d -p 8888:3000 ${{ secrets.CUSTOM_DOCKER_HUB }}/gotoo123/just4u-backend:main
