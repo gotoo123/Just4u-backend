@@ -17,4 +17,17 @@ router.get('/:id', function(req, res) {
   }
 })
 
+router.post('/updateNote', function(req, res) {
+  const { name, content } = req.body;
+  const mdPath = path.resolve(__dirname, `../data/md/articles/${name}`);
+  const fileExist = fs.existsSync(mdPath);
+
+  if(fileExist) {
+    fs.writeFileSync(mdPath, content);
+    res.send(resFormat(1000, null));
+  } else {
+    res.send(resFormat(1001, null, 'file not exists!'));
+  }
+})
+
 module.exports = router;
