@@ -50,7 +50,30 @@ router.post('/createNote', function(req, res) {
     // 新建note文件
     const newPath = mdPath + `/articles/${newId}.md`;
     fs.writeFileSync(newPath, `##${title}`)
-    res.send(resFormat(1000, null));
+    res.send(resFormat(1000, {...info}));
+  } catch(e) {
+    console.log(e)
+    res.send(resFormat(1001, null, 'create error'));
+  }
+})
+
+router.post('/deleteNote', function(req, res){
+  const { id } = req.body;
+  const filePath = path.resolve(__dirname, `../data/md/articles/${id}.md`);
+  const fileExist = fs.existsSync(filePath);
+
+  try {
+    if(fileExist) {
+      const mdPath = path.resolve(__dirname, `../data/md`);
+      const listJsonPath = path.resolve(mdPath, './list.json');
+      const listJson = fse.readJsonSync(listJsonPath);
+      const newListJson = listJson.filter(item => item.id !== id);
+      fse.writeJsonSync(listJsonPath, newListJson);
+      fs.unlinkSync(filePath);
+      res.send(resFormat(1000, null));
+    } else {
+      res.send(resFormat(1001, null, 'create error'));
+    }
   } catch(e) {
     console.log(e)
     res.send(resFormat(1001, null, 'create error'));
